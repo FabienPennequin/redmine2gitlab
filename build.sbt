@@ -8,5 +8,9 @@ lazy val root = (project in file(".")).
       version      := "0.1.0-SNAPSHOT"
     )),
     name := "Redmine2Gitlab",
-    libraryDependencies += scalaTest % Test
+    libraryDependencies ++= Seq(
+      playWsAhc,
+      playJson,
+      scalaTest % Test
+    )
   )
