@@ -8,8 +8,9 @@ import play.api.libs.ws.ahc.AhcWSClient
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
 
-object MigrationApp extends App {
+object Main extends App {
   println("Starting migration from redmine to gitlab...")
+
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val wsClient = AhcWSClient()
@@ -25,7 +26,6 @@ object MigrationApp extends App {
           System.exit(if(state.isSuccess) 0 else -1)
           ()
         }
-    }
     }
 
   def runImport(wsClient: WSClient) =
