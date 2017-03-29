@@ -4,12 +4,13 @@ import java.nio.file.{Files, Paths}
 
 import models._
 import services._
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import com.typesafe.sslconfig.ssl.{SSLConfigSettings, SSLLooseConfig}
 import play.api.Logger
 import play.api.libs.ws._
-import play.api.libs.ws.ahc.AhcWSClient
+import play.api.libs.ws.ahc.{AhcConfigBuilder, AhcWSClient, AhcWSClientConfig, StandaloneAhcWSClient}
+import play.shaded.ahc.org.asynchttpclient.DefaultAsyncHttpClient
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -35,7 +36,8 @@ object Main extends App {
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
-  val wsClient = AhcWSClient()
+
+  val wsClient = buildWsClient()
 
   val fut = convertData(config, wsClient)
 
@@ -51,11 +53,25 @@ object Main extends App {
     ()
   }
 
-  def convertData(config: AppConfig, wSClient: WSClient) = {
+  private def convertData(config: AppConfig, wSClient: WSClient) = {
     val redmine = new Redmine(config, wsClient)
     val gitlab = new Gitlab(config, wsClient)
 
     new Converter(redmine, gitlab).run()
+  }
+
+  private def buildWsClient() = {
+    val wsConfig = AhcWSClientConfig().copy(
+      wsClientConfig = WSClientConfig().copy(
+        ssl = SSLConfigSettings().withLoose(SSLLooseConfig().withAcceptAnyCertificate(config.ws.acceptAnyCertificate))
+      )
+    )
+    val builder = new AhcConfigBuilder(wsConfig)
+    val ahcBuilder = builder.configure()
+    val ahcConfig = ahcBuilder.build()
+    val asyncHttpClient = new DefaultAsyncHttpClient(ahcConfig)
+
+    new AhcWSClient(new StandaloneAhcWSClient(asyncHttpClient))
   }
 
 }
