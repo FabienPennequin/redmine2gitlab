@@ -1,5 +1,9 @@
 package eu.pennequin.fabien.redmine2gitlab
 
+import java.nio.file.{Files, Paths}
+
+import models._
+import services._
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import play.api.libs.ws._
@@ -10,6 +14,19 @@ import scala.concurrent.Future
 
 object Main extends App {
   println("Starting migration from redmine to gitlab...")
+
+  if (args.length < 1) {
+    System.err.println("Config file needed")
+    System.exit(-1)
+  }
+
+  val configpath = Paths.get(args(0))
+  if (!Files.exists(configpath)) {
+    System.err.println("Config file does not exist")
+    System.exit(-1)
+  }
+
+  val config = new ConfigLoader().load(configpath)
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
