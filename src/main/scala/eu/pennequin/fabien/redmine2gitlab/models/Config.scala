@@ -14,4 +14,4 @@ case class GitlabConfig(url: String)
 
 case class ProjectConfig(redmineId: Long, gitlabId: String)
 
-case class UserConfig(redmineId: Long, gitlabId: String, gitlabKey: String)
+case class UserConfig(redmineId: Long, gitlabId: Long, gitlabKey: String)

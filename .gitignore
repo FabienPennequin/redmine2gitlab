@@ -9,3 +9,4 @@ project/plugins/project/
 .lib/
 /.idea
 .DS_Store
+/application.conf
