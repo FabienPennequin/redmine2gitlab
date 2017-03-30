@@ -43,6 +43,7 @@ object Main extends App {
 
   fut.recover {
     case err =>
+      System.err.println(err.getMessage)
       logger.warn("Error during data conversion", err)
       ()
   }.andThen {
@@ -55,7 +56,7 @@ object Main extends App {
 
   private def convertData(config: AppConfig, wSClient: WSClient) = {
     val redmine = new Redmine(config, wsClient)
-    val gitlab = new Gitlab(config, wsClient)
+    val gitlab = new Gitlab(wsClient, config.gitlab.url, config.users.head.gitlabKey)
 
     new Converter(redmine, gitlab).run()
   }
