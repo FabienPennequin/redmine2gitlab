@@ -3,13 +3,13 @@ package models
 
 import java.time.{LocalDate, LocalDateTime}
 
-import play.api.libs.json.{Json, JsonConfiguration}
 import play.api.libs.json.JsonNaming.SnakeCase
+import play.api.libs.json.{Json, JsonConfiguration}
 
 case class GitlabMilestone(
-  id: Long,
-  iid: Long,
-  projectId: Long,
+  id: GitlabMilestoneId,
+  iid: GitlabMilestoneId,
+  projectId: GitlabProjectId,
   title: String,
   description: String,
   dueDate: LocalDate,
