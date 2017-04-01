@@ -3,6 +3,7 @@ package services
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 
@@ -14,7 +15,10 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
     httpClient(s"projects/$projectId/milestones")
       .get()
       .map { response =>
-        response.json.as[Seq[GitlabMilestone]]
+        response.status match {
+          case Status.OK => response.json.as[Seq[GitlabMilestone]]
+          case _ => throw new Exception(response.body)
+        }
       }
   }
 
@@ -22,7 +26,10 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
     httpClient(s"projects/$projectId/milestones")
       .post(Json.toJson(milestone))
       .map { response =>
-        response.json.as[GitlabMilestone]
+        response.status match {
+          case Status.OK => response.json.as[GitlabMilestone]
+          case _ => throw new Exception(response.body)
+        }
       }
   }
 
@@ -30,16 +37,22 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
     httpClient(s"projects/$projectId/milestones/$milestoneId")
       .put(Json.obj("state_event" -> "close"))
       .map { response =>
-        response.json.as[GitlabMilestone]
+        response.status match {
+          case Status.OK => response.json.as[GitlabMilestone]
+          case _ => throw new Exception(response.body)
+        }
       }
   }
 
-  def projects()(implicit ec: ExecutionContext) = {
+  def getProjectsMembership()(implicit ec: ExecutionContext) = {
     httpClient("projects")
       .withQueryString(("membership", "true"))
       .get()
       .map { response =>
-        response.json.as[Seq[GitlabProject]]
+        response.status match {
+          case Status.OK => response.json.as[Seq[GitlabProject]]
+          case _ => throw new Exception(response.body)
+        }
       }
   }
 
