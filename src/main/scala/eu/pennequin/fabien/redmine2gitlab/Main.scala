@@ -56,7 +56,7 @@ object Main extends App {
 
   private def convertData(config: AppConfig, wSClient: WSClient) = {
     val redmine = new Redmine(config, wsClient)
-    val gitlab = new Gitlab(wsClient, config.gitlab.url, config.users.head.gitlabKey)
+    val gitlab = new Gitlab(wsClient, config.gitlab.url, config.gitlab.apiKey)
 
     new Converter(redmine, gitlab).run()
   }
