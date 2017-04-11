@@ -18,32 +18,38 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
   def getMilestones(projectId: Long)(implicit ec: ExecutionContext): Future[GitlabResult[Seq[GitlabMilestone]]] = {
     httpClient(s"projects/$projectId/milestones")
       .get()
-      .map(asResult[Seq[GitlabMilestone]])
+      .map(r => asResult[Seq[GitlabMilestone]](r, Status.OK))
   }
 
   def createMilestone(projectId: GitlabProjectId, milestone: GitlabMilestoneCreationDto)(implicit  ec: ExecutionContext): Future[GitlabResult[GitlabMilestone]] = {
     httpClient(s"projects/$projectId/milestones")
       .post(Json.toJson(milestone))
-      .map(asResult[GitlabMilestone])
+      .map(r => asResult[GitlabMilestone](r, Status.CREATED))
   }
 
   def closeMilestone(projectId: GitlabProjectId, milestoneId: GitlabMilestoneId)(implicit ec: ExecutionContext): Future[GitlabResult[GitlabMilestone]] = {
     httpClient(s"projects/$projectId/milestones/$milestoneId")
       .put(Json.obj("state_event" -> "close"))
-      .map(asResult[GitlabMilestone])
+      .map(r => asResult[GitlabMilestone](r, Status.OK))
   }
 
   def createIssue(projectId: GitlabProjectId, issue: GitlabIssueCreationDto)(implicit ec: ExecutionContext): Future[GitlabResult[GitlabIssue]] = {
     httpClient(s"/projects/$projectId/issues")
       .post(Json.toJson(issue))
-      .map(asResult[GitlabIssue])
+      .map(r => asResult[GitlabIssue](r, Status.CREATED))
+  }
+
+  def createIssueNote(projectId: GitlabProjectId, issueIid: GitlabIssueId, dto: GitlabNoteDto)(implicit ec: ExecutionContext): Future[GitlabResult[GitlabNote]] = {
+    httpClient(s"/projects/$projectId/issues/$issueIid/notes")
+      .post(Json.toJson(dto))
+      .map(r => asResult[GitlabNote](r, Status.CREATED))
   }
 
   def getProjectsMembership()(implicit ec: ExecutionContext): Future[GitlabResult[Seq[GitlabProject]]] = {
     httpClient("projects")
       .withQueryString(("membership", "true"))
       .get()
-      .map(asResult[Seq[GitlabProject]])
+      .map(r => asResult[Seq[GitlabProject]](r, Status.OK))
   }
 
   private def httpClient(uri: String) =
@@ -51,15 +57,15 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
       .url(s"${apiUrl}/$uri")
       .withHeaders(("PRIVATE-TOKEN", apiKey))
 
-  private def asResult[T](response: WSResponse)(implicit fjs: Reads[T]): GitlabResult[T] = {
+  private def asResult[T](response: WSResponse, expectedStatus: Int)(implicit fjs: Reads[T]): GitlabResult[T] = {
     response.status match {
-      case Status.OK =>
+      case `expectedStatus` =>
         response.json.validate[T].fold(
           errors => GitlabResultError(errors.mkString),
           value => GitlabResultSuccess(value)
         )
       case _ =>
-        GitlabResultError(s"Got ${response.statusText} from Gitlab: ${response.body}")
+        GitlabResultError(s"Got '${response.statusText}' from Gitlab: ${response.body}")
     }
   }
 
