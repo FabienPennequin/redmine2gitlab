@@ -44,6 +44,17 @@ class Gitlab(wsClient: WSClient, baseUrl: String, apiKey: String) {
       }
   }
 
+  def createIssue(projectId: GitlabProjectId, issue: GitlabIssueCreationDto)(implicit ec: ExecutionContext) = {
+    httpClient(s"/projects/$projectId/issues")
+      .post(Json.toJson(issue))
+      .map { response =>
+        response.status match {
+          case Status.OK => response.json.as[GitlabIssue]
+          case _ => throw new Exception(response.body)
+        }
+      }
+  }
+
   def getProjectsMembership()(implicit ec: ExecutionContext) = {
     httpClient("projects")
       .withQueryString(("membership", "true"))
