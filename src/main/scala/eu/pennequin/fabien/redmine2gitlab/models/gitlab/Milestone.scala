@@ -1,15 +1,14 @@
-package eu.pennequin.fabien.redmine2gitlab
-package models
-
-import java.time.{LocalDate, LocalDateTime}
+package eu.pennequin.fabien.redmine2gitlab.models.gitlab
 
 import play.api.libs.json.JsonNaming.SnakeCase
 import play.api.libs.json.{Json, JsonConfiguration}
 
-case class GitlabMilestone(
-  id: GitlabMilestoneId,
-  iid: GitlabMilestoneId,
-  projectId: GitlabProjectId,
+import java.time.{LocalDate, LocalDateTime}
+
+case class Milestone(
+  id: MilestoneId,
+  iid: MilestoneId,
+  projectId: ProjectId,
   title: String,
   description: String,
   dueDate: LocalDate,
@@ -19,10 +18,10 @@ case class GitlabMilestone(
   updatedAt: LocalDateTime
 )
 
-object GitlabMilestone {
+object Milestone {
 
   implicit val config = JsonConfiguration(SnakeCase)
 
-  implicit val jsonFormat = Json.format[GitlabMilestone]
+  implicit val jsonFormat = Json.format[Milestone]
 
 }

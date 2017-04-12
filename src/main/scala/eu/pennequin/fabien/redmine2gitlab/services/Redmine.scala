@@ -1,8 +1,8 @@
-package eu.pennequin.fabien.redmine2gitlab
-package services
+package eu.pennequin.fabien.redmine2gitlab.services
 
-import models.{AppConfig, RedmineVersion}
 import play.api.libs.ws.WSClient
+
+import eu.pennequin.fabien.redmine2gitlab.models.{AppConfig, RedmineVersion}
 
 import scala.concurrent.{ExecutionContext, Future}
 

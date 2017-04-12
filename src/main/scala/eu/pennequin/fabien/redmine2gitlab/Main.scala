@@ -1,20 +1,20 @@
 package eu.pennequin.fabien.redmine2gitlab
 
-import java.nio.file.{Files, Paths}
-
-import models._
-import services._
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import com.typesafe.sslconfig.ssl.{SSLConfigSettings, SSLLooseConfig}
 import play.api.Logger
 import play.api.libs.ws._
 import play.api.libs.ws.ahc.{AhcConfigBuilder, AhcWSClient, AhcWSClientConfig, StandaloneAhcWSClient}
 import play.shaded.ahc.org.asynchttpclient.DefaultAsyncHttpClient
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import com.typesafe.sslconfig.ssl.{SSLConfigSettings, SSLLooseConfig}
+import eu.pennequin.fabien.redmine2gitlab.models._
+import eu.pennequin.fabien.redmine2gitlab.services._
+
 import scala.concurrent.Await
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent.duration._
+import java.nio.file.{Files, Paths}
 
 object Main extends App {
   implicit val logger = Logger("redmine2gitlab")

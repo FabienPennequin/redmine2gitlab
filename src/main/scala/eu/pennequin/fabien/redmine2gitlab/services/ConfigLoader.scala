@@ -1,13 +1,12 @@
-package eu.pennequin.fabien.redmine2gitlab
-package services
-
-import java.nio.file.{Files, Path}
+package eu.pennequin.fabien.redmine2gitlab.services
 
 import com.typesafe.config.{Config, ConfigFactory}
 import eu.pennequin.fabien.redmine2gitlab.models.{AppConfig, UserConfig}
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.ValueReader
+
+import java.nio.file.{Files, Path}
 
 class ConfigLoader {
 

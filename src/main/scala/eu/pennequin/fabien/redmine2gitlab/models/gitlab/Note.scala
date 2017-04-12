@@ -1,11 +1,11 @@
-package eu.pennequin.fabien.redmine2gitlab.models
+package eu.pennequin.fabien.redmine2gitlab.models.gitlab
 
 import play.api.libs.json.JsonNaming.SnakeCase
 import play.api.libs.json.{Json, JsonConfiguration}
 
 import java.time.LocalDateTime
 
-case class GitlabNote(
+case class Note(
   id: Long,
   body: String,
   attachment: Option[String],
@@ -16,8 +16,8 @@ case class GitlabNote(
   noteableType: String
 )
 
-object GitlabNote {
+object Note {
   implicit val config = JsonConfiguration(SnakeCase)
-  implicit val jsonFormat = Json.format[GitlabNote]
+  implicit val jsonFormat = Json.format[Note]
 
 }

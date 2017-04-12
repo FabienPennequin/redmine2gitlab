@@ -1,15 +1,14 @@
-package eu.pennequin.fabien.redmine2gitlab
-package models
+package eu.pennequin.fabien.redmine2gitlab.models.gitlab
+
+import play.api.libs.json.JsonNaming.SnakeCase
+import play.api.libs.json.{Json, JsonConfiguration}
 
 import java.time.LocalDateTime
 
-import play.api.libs.json.{Json, JsonConfiguration}
-import play.api.libs.json.JsonNaming.SnakeCase
-
-case class GitlabIssue(
-  id: GitlabIssueId,
-  iid: GitlabIssueId,
-  projectId: GitlabProjectId,
+case class Issue(
+  id: IssueId,
+  iid: IssueId,
+  projectId: ProjectId,
 
   title: String,
   description: Option[String] = None,
@@ -26,9 +25,9 @@ case class GitlabIssue(
 )
 
 
-object GitlabIssue {
+object Issue {
 
   implicit val config = JsonConfiguration(SnakeCase)
-  implicit val jsonFormat = Json.format[GitlabIssue]
+  implicit val jsonFormat = Json.format[Issue]
 
 }

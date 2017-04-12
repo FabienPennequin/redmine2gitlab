@@ -1,5 +1,4 @@
-package eu.pennequin.fabien.redmine2gitlab
-package services
+package eu.pennequin.fabien.redmine2gitlab.services
 
 import scala.concurrent.{ExecutionContext, Future}
 
