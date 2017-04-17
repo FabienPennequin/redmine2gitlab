@@ -36,13 +36,13 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
   }
 
   def createIssue(projectId: ProjectId, issue: IssueCreationDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
-    httpClient(s"/projects/$projectId/issues")
+    httpClient(s"projects/$projectId/issues")
       .post(Json.toJson(issue))
       .map(r => asResult[Issue](r, Status.CREATED))
   }
 
   def createIssueNote(projectId: ProjectId, issueIid: IssueId, dto: NoteDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Note]] = {
-    httpClient(s"/projects/$projectId/issues/$issueIid/notes")
+    httpClient(s"projects/$projectId/issues/$issueIid/notes")
       .post(Json.toJson(dto))
       .map(r => asResult[Note](r, Status.CREATED))
   }
