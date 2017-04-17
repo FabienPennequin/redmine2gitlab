@@ -9,11 +9,14 @@ case class Milestone(
   id: MilestoneId,
   iid: MilestoneId,
   projectId: ProjectId,
+
   title: String,
-  description: String,
-  dueDate: LocalDate,
-  startDate: LocalDate,
+  description: Option[String] = None,
   state: String,
+
+  startDate: Option[LocalDate] = None,
+  dueDate: Option[LocalDate] = None,
+
   createdAt: LocalDateTime,
   updatedAt: LocalDateTime
 )
@@ -21,7 +24,6 @@ case class Milestone(
 object Milestone {
 
   implicit val config = JsonConfiguration(SnakeCase)
-
   implicit val jsonFormat = Json.format[Milestone]
 
 }

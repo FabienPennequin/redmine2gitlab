@@ -9,7 +9,7 @@ case class MilestoneCreationDto(
   title: String,
   description: Option[String] = None,
   dueDate: Option[LocalDate] = None,
-  startDate: Option[LocalDateTime] = None
+  startDate: Option[LocalDate] = None
 )
 
 object MilestoneCreationDto {
