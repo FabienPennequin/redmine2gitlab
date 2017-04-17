@@ -8,7 +8,15 @@ case class AppConfig(
   ws: WsConfig
 )
 
-case class RedmineConfig(url: String, apiKey: String, projectId: Long)
+case class RedmineConfig(
+  url: String,
+  apiKey: String,
+  projectId: Long,
+  closeStatuses: Seq[Int],
+  trackers: Seq[RedmineTrackerConfig]
+)
+
+case class RedmineTrackerConfig(id: Long, labels: Seq[String])
 
 case class GitlabConfig(url: String, apiKey: String, projectId: Long)
 
