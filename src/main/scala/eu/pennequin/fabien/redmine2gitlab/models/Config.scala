@@ -13,6 +13,7 @@ case class RedmineConfig(
   apiKey: String,
   projectId: Long,
   closeStatuses: Seq[Int],
+  ignoreVersionsIds: Seq[Long],
   trackers: Seq[RedmineTrackerConfig]
 )
 
