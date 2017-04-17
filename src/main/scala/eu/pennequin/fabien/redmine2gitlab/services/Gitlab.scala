@@ -41,6 +41,12 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
       .map(r => asResult[Issue](r, Status.CREATED))
   }
 
+  def deleteIssue(projectId: ProjectId, issueIid: IssueId)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Unit]] = {
+    httpClient(s"projects/$projectId/issues/$issueIid")
+      .delete()
+      .map(r => if (r.status == Status.NO_CONTENT) GitlabResultSuccess(()) else GitlabResultError(r.body))
+  }
+
   def createIssueNote(projectId: ProjectId, issueIid: IssueId, dto: NoteDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Note]] = {
     httpClient(s"projects/$projectId/issues/$issueIid/notes")
       .post(Json.toJson(dto))
