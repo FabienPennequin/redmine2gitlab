@@ -10,14 +10,12 @@ case class Version(
   name: String,
   description: String,
   status: VersionStatus,
-  dueDate: Option[LocalDate],
+  dueDate: Option[LocalDate] = None,
   createdOn: LocalDateTime,
   updatedOn: LocalDateTime
 )
 
 object Version {
-
   implicit val config = JsonConfiguration(SnakeCase)
   implicit val jsonFormat = Json.format[Version]
-
 }

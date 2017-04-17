@@ -12,9 +12,9 @@ case class Issue(
   project: ObjectRef,
   tracker: ObjectRef,
   status: ObjectRef,
-  priority: ObjectRef,
   author: ObjectRef,
-  category: ObjectRef,
+  priority: Option[ObjectRef] = None,
+  category: Option[ObjectRef] = None,
   fixedVersion: Option[ObjectRef] = None,
   assignedTo: Option[ObjectRef] = None,
   createdOn: LocalDateTime,
@@ -32,9 +32,9 @@ object Issue {
     (JsPath \ "project").read[ObjectRef] and
     (JsPath \ "tracker").read[ObjectRef] and
     (JsPath \ "status").read[ObjectRef] and
-    (JsPath \ "priority").read[ObjectRef] and
     (JsPath \ "author").read[ObjectRef] and
-    (JsPath \ "category").read[ObjectRef] and
+    (JsPath \ "priority").readNullable[ObjectRef] and
+    (JsPath \ "category").readNullable[ObjectRef] and
     (JsPath \ "fixed_version").readNullable[ObjectRef] and
     (JsPath \ "assigned_to").readNullable[ObjectRef] and
     (JsPath \ "created_on").read[LocalDateTime] and
