@@ -11,7 +11,7 @@
   <logger name="redmine2gitlab" level="DEBUG" />
   <logger name="gitlab" level="DEBUG" />
 
-  <logger name="play.shaded.ahc.org.asynchttpclient" level="DEBUG" />
+  <logger name="play.shaded.ahc.org.asynchttpclient" level="INFO" />
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />
