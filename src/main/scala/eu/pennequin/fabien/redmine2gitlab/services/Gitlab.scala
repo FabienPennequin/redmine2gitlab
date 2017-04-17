@@ -43,18 +43,28 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
   }
 
   def createIssue(projectId: ProjectId, issue: IssueCreationDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
+    val body = Json.toJson(issue)
+    logger.debug(s"Creating issue on project '$projectId': $body")
+
     httpClient(s"projects/$projectId/issues")
-      .post(Json.toJson(issue))
+      .post(body)
       .map(r => asResult[Issue](r, Status.CREATED))
   }
 
-  def closeIssue(projectId: ProjectId, issueIid: IssueId, updatedAt: Option[LocalDateTime] = None)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
+  def editIssue(projectId: ProjectId, issueIid: IssueId, dto: IssueEditionDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
+    val body = Json.toJson(dto)
+    logger.debug(s"Updating issue '$issueIid' on project '$projectId': $body")
+
     httpClient(s"projects/$projectId/issues/$issueIid")
-      .put(Json.toJson(IssueEditionDto(
-        stateEvent = Some("close"),
-        updatedAt = updatedAt
-      )))
+      .put(body)
       .map(r => asResult[Issue](r, Status.OK))
+  }
+
+  def closeIssue(projectId: ProjectId, issueIid: IssueId, updatedAt: Option[LocalDateTime] = None)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
+    editIssue(projectId, issueIid, IssueEditionDto(
+      stateEvent = Some("close"),
+      updatedAt = updatedAt
+    ))
   }
 
   def deleteIssue(projectId: ProjectId, issueIid: IssueId)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Unit]] = {
