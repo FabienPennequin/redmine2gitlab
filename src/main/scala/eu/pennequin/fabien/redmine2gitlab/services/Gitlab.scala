@@ -36,6 +36,12 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
       .map(r => asResult[Milestone](r, Status.OK))
   }
 
+  def getIssuesForProject(projectId: ProjectId)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Seq[Issue]]] = {
+    httpClient(s"projects/$projectId/issues")
+      .get()
+      .map(r => asResult[Seq[Issue]](r, Status.OK))
+  }
+
   def createIssue(projectId: ProjectId, issue: IssueCreationDto)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
     httpClient(s"projects/$projectId/issues")
       .post(Json.toJson(issue))
