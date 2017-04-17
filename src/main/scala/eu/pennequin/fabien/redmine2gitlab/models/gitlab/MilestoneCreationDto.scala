@@ -3,13 +3,13 @@ package eu.pennequin.fabien.redmine2gitlab.models.gitlab
 import play.api.libs.json.JsonNaming.SnakeCase
 import play.api.libs.json.{Json, JsonConfiguration}
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 case class MilestoneCreationDto(
   title: String,
   description: Option[String] = None,
   dueDate: Option[LocalDate] = None,
-  startDate: Option[LocalDate] = None
+  startDate: Option[LocalDateTime] = None
 )
 
 object MilestoneCreationDto {
