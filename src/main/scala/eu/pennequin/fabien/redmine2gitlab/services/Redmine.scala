@@ -9,6 +9,19 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class Redmine(config: RedmineConfig, wsClient: WSClient) {
 
+  def getIssuesForVersion(versionId: Long)(implicit ec: ExecutionContext): Future[Seq[Issue]] = {
+    httpClient("issues.json")
+      .withQueryString(
+        ("fixed_version_id", versionId.toString),
+        ("set_filter", "1"),
+        ("status_id", "*")
+      )
+      .get()
+      .map { response =>
+        (response.json \ "issues").as[Seq[Issue]]
+      }
+  }
+
   def issue(issueId: Long, include: Seq[String] = Seq.empty)(implicit ec: ExecutionContext): Future[Issue] = {
     httpClient(s"issues/$issueId.json")
       .withQueryString(("include", include.mkString(",")))
