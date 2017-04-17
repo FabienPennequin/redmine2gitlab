@@ -9,7 +9,8 @@ case class IssueJournal(
   id: Long,
   user: ObjectRef,
   createdOn: LocalDateTime,
-  notes: Option[String] = None
+  notes: Option[String] = None,
+  details: Seq[IssueJournalDetail] = Seq.empty
 )
 
 object IssueJournal {

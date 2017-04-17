@@ -5,7 +5,9 @@ import play.api.libs.json.{Json, JsonConfiguration}
 
 case class IssueJournalDetail(
   property: String,
-  name: String
+  name: String,
+  oldValue: String,
+  newValue: String
 )
 
 object IssueJournalDetail {

@@ -16,6 +16,7 @@ case class Issue(
   author: ObjectRef,
   category: ObjectRef,
   fixedVersion: Option[ObjectRef] = None,
+  assignedTo: Option[ObjectRef] = None,
   createdOn: LocalDateTime,
   updatedOn: LocalDateTime,
   doneRatio: Option[Int] = None,
@@ -35,6 +36,7 @@ object Issue {
     (JsPath \ "author").read[ObjectRef] and
     (JsPath \ "category").read[ObjectRef] and
     (JsPath \ "fixed_version").readNullable[ObjectRef] and
+    (JsPath \ "assigned_to").readNullable[ObjectRef] and
     (JsPath \ "created_on").read[LocalDateTime] and
     (JsPath \ "updated_on").read[LocalDateTime] and
     (JsPath \ "done_ratio").readNullable[Int] and
