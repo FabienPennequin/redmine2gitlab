@@ -1,5 +1,6 @@
 package eu.pennequin.fabien.redmine2gitlab.services
 
+import play.api.Logger
 import play.api.http.Status
 import play.api.libs.json.{Json, Reads}
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -13,6 +14,8 @@ case class GitlabResultSuccess[T](value: T) extends GitlabResult[T]
 case class GitlabResultError[T](message: String) extends GitlabResult[T]
 
 class Gitlab(wsClient: WSClient, baseUrl: String) {
+
+  val logger = Logger("gitlab")
 
   def getMilestones(projectId: Long)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Seq[Milestone]]] = {
     httpClient(s"projects/$projectId/milestones")
@@ -51,19 +54,24 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
       .map(r => asResult[Seq[Project]](r, Status.OK))
   }
 
-  private def httpClient(uri: String)(implicit apiKey: ApiPrivateKey) =
+  private def httpClient(uri: String)(implicit apiKey: ApiPrivateKey) = {
+    val url = s"${apiUrl}/$uri"
+    logger.info(url)
     wsClient
-      .url(s"${apiUrl}/$uri")
+      .url(url)
       .withHeaders(("PRIVATE-TOKEN", apiKey.key))
+  }
 
   private def asResult[T](response: WSResponse, expectedStatus: Int)(implicit fjs: Reads[T]): GitlabResult[T] = {
     response.status match {
       case `expectedStatus` =>
+        logger.info(s"Got '${expectedStatus}'")
         response.json.validate[T].fold(
           errors => GitlabResultError(errors.mkString),
           value => GitlabResultSuccess(value)
         )
       case _ =>
+        logger.warn(s"Got '${response.statusText}' with content: ${response.body}")
         GitlabResultError(s"Got '${response.statusText}' from Gitlab: ${response.body}")
     }
   }

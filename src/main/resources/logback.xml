@@ -1,0 +1,20 @@
+<configuration>
+
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="redmine2gitlab" level="DEBUG" />
+  <logger name="gitlab" level="DEBUG" />
+
+  <logger name="play.shaded.ahc.org.asynchttpclient" level="DEBUG" />
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</configuration>
