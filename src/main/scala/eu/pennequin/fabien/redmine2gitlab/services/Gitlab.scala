@@ -8,6 +8,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 import eu.pennequin.fabien.redmine2gitlab.models.gitlab._
 
 import scala.concurrent.{ExecutionContext, Future}
+import java.time.LocalDateTime
 
 sealed trait GitlabResult[T]
 case class GitlabResultSuccess[T](value: T) extends GitlabResult[T]
@@ -39,6 +40,15 @@ class Gitlab(wsClient: WSClient, baseUrl: String) {
     httpClient(s"projects/$projectId/issues")
       .post(Json.toJson(issue))
       .map(r => asResult[Issue](r, Status.CREATED))
+  }
+
+  def closeIssue(projectId: ProjectId, issueIid: IssueId, updatedAt: Option[LocalDateTime] = None)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Issue]] = {
+    httpClient(s"projects/$projectId/issues/$issueIid")
+      .put(Json.toJson(IssueEditionDto(
+        stateEvent = Some("close"),
+        updatedAt = updatedAt
+      )))
+      .map(r => asResult[Issue](r, Status.OK))
   }
 
   def deleteIssue(projectId: ProjectId, issueIid: IssueId)(implicit ec: ExecutionContext, apiKey: ApiPrivateKey): Future[GitlabResult[Unit]] = {
