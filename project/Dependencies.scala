@@ -1,7 +1,7 @@
 import sbt._
 
 object Dependencies {
-  val playVersion = "2.6.0-M4"
+  val playVersion = "2.6.2"
 
   lazy val playJson = "com.typesafe.play" %% "play-json" % playVersion
   lazy val playWsAhc = "com.typesafe.play" %% "play-ahc-ws" % playVersion
@@ -11,6 +11,6 @@ object Dependencies {
 
   // lazy val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
 
-  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1"
+  lazy val scalaTest = "org.scalatest" %% "scalatest" % "3.0.3"
 
 }
